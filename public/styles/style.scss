@@ -1,0 +1,39 @@
+$primary-font: cursive;
+$color-primary: black;
+$align:center;
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+
+.card-head{
+font-family: $primary-font;
+color: $color-primary;
+}
+.cards{
+    border: $color-primary solid 2px;
+    margin: 5px;
+    height: 30%;
+}
+.card-body{
+    background-color: gray;
+    text-align: $align !important;
+}
+.notas{
+    font-family: $primary-font;
+    font-size: 30px;
+    color: white;
+    text-align: $align !important;
+    margin-left: 45%;
+}
+.card-content{
+background-color: gray;
+}
+
+.navbar2{
+    background-color: blue;
+    padding: 20px;
+}
+
+.card-title{
+    text-align: $align !important;
+
+}

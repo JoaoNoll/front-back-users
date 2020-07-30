@@ -1,96 +1,100 @@
 const axios = require('axios').default;
 
-class User {
-    constructor(){
-        this.name = document.getElementById('txtName');
-        this.email = document.getElementById('txtEmail');
-        this.age = document.getElementById('txtAge');
-        this.phone = document.getElementById('txtPhone');
-        this.btnRegisterUser = document.getElementById('btnRegister');
+class Card {
+    constructor() {
+        this.title = document.getElementById('txtTitle');
+        this.date = document.getElementById('txtDate');
+        this.hour = document.getElementById('txtHour');
+        this.content = document.getElementById('txtContent');
+        this.btnRegisterCard = document.getElementById('btnRegister');
 
+        this.getCards();
         this.events();
-        this.getUsers();
     }
 
-    events(){
-        this.btnRegisterUser.onclick = (event) => this.UserValidate(event);
+    events() {
+        this.btnRegisterCard.onclick = (event) => this.cardValidate(event);
     }
 
-
-    getUsers(){
-        axios.get(`http://localhost:3000/users`)
-        .then((response) =>{
-            this.recoryUser(response.data.userList);
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
+    getCards() {
+        axios.get(`http://localhost:3000/notes`)
+            .then((response) => {
+                this.recoryCard(response.data.notes);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
-    recoryUser(data){
-        for(user of data){
-            
-            const html = this.layoutUser(user.name, user.email, user.age, user.phone);
+    recoryCard(data) {
+        for (card of data) {
+
+            const html = this.layoutCard(card.title, card.hour, card.date, card.content);
 
             this.insertHtml(html);
+
+
         }
-        
     }
 
-    layoutUser(name, email, age, phone){
-        const html = `
-        <div class='col mt-5'>
+    layoutCard(title, hour, date, content) {
+        return `
+        <div class='col cards mt-5'>
             <div class='card'>
-                <div class= 'user-body'>
-                    <h3 class='user-name'>${name} </h3>
-                    <p class= 'user-email'> ${email}</p>
-                    <p class= 'user-age'> ${age}</p>
-                    <p class= 'user-phone'> ${phone}</p>
+                <div class='card-head'>
+                    <h3 class='card-title'>${title}</h3>
+                    <p class='card-body'>${hour}</p>
+                    <p class='card-body'>${date}</p>
+                    <p class='card-content'>${content}</p>
+                
                 </div>
-            </div>
+            </div
         </div>
         `;
 
-        return html;
     }
 
 
-    UserValidate(){
+    cardValidate(event) {
         event.preventDefault();
+        if (this.title.value && this.hour.value && this.date.value && this.content.value) {
+            const card = {
+                title: this.title.value,
+                hour: this.hour.value,
+                date: this.date.value,
+                content: this.content.value
+            }
 
-        if(this.name.value && this.email.value && this.age.value && this.phone.value){
-            const user = {
-                name: this.name.value,
-                email: this.email.value,
-                age: this.age.value,
-                phone: this.phone.value
-            };
+            this.createCard(card);
 
-            this.createUser(user);
-        } else{
-            alert('favor, preencha todos os dados');
+        } else {
+            alert('Por favor, preencha todos os dados!');
         }
-        
+
     }
 
-    insertHtml(html){
-        document.getElementById('usersBoard').innerHTML += html;
-    }
+    insertHtml(html) {
+        document.getElementById('showCards').innerHTML += html;
 
-    createUser(user){
-        axios.post('http://localhost:3000/users', user)
-        .then((response)=> {
-           const html = this.layoutUser(user.name, user.email, user.age, user.phone);
-
-           this.insertHtml(html);
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
     }
 
 
 
+    createCard(card) {
+        axios.post('http://localhost:3000/notes', card)
+            .then((response) => {
+
+                const html = this.layoutCard(card.title, card.hour, card.date, card.content);
+
+                this.insertHtml(html);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
 }
 
-new User();
+
+
+
+new Card();
